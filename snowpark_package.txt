@@ -1,0 +1,5 @@
+pip install snowflake-snowpark-python
+
+pip install snowflake -U
+
+pip install snowflake-cli-labs
