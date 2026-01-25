@@ -6,7 +6,9 @@ conda init
 
 conda activate py12_env
 
-conda install snowflake-snowpark-python
+# conda install snowflake-snowpark-python -- if this command do not work then try pip command
+
+pip install snowflake-snowpark-python
 
 # OPTIONAL
 conda install snowflake-snowpark-python pandas pyarrow
