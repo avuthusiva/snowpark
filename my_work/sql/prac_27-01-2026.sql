@@ -72,3 +72,16 @@ begin
     return trim(out_str);
 end;
 $$;
+execute immediate
+$$
+declare
+    c1 cursor for select * from emp;
+    v_total_sal number:=0; 
+begin
+    for i in c1
+    loop
+        v_total_sal := v_total_sal + i.SAL;
+    end loop;
+    return v_total_sal;
+end;
+$$;
