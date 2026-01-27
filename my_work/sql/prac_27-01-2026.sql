@@ -105,4 +105,53 @@ begin
 end;
 $$;
 call pr_cursor_prac_1('EMP');
-
+execute immediate
+$$
+declare
+    c1 cursor for select * from identifier(?) where identifier(?) = ?;
+    v_total_sal number:=0;
+    v_deptno int := 30;
+    v_table_name varchar := 'EMP';
+    v_column_name varchar := 'DEPTNO';
+begin
+    open c1 using(v_table_name, v_column_name, v_deptno);
+    for i in c1
+    loop
+        v_total_sal := v_total_sal + i.SAL;
+    end loop;
+    close c1; 
+    return v_total_sal;
+end;
+$$;
+execute immediate
+$$
+declare
+    v_sql varchar := '';
+    v_res resultset;
+    v_n number:=1;
+    v_deptno number:=30;
+begin
+    v_sql := 'select * from emp where sal in (
+                select sal from (
+                select sal,dense_rank() over(order by sal desc) dn from emp where deptno=' || :v_deptno || ')
+                where dn<=' || :v_n || ')';
+    v_res := (execute immediate v_sql); 
+    return table(v_res);
+end;
+$$;
+execute immediate
+$$
+declare
+    c1 cursor for select * from emp where deptno = ?;
+    v_deptno number :=40;
+    v_cnt number := 0;
+begin
+    select count(*) into :v_cnt from emp where deptno = :v_deptno;
+    if (v_cnt = 0) then
+        return 'No records found for deptno ' || :v_deptno;
+    end if;
+    open c1 using(:v_deptno);
+    return table(resultset_from_cursor(c1));
+    close c1;
+end;
+$$;
