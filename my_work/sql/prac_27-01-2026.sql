@@ -88,19 +88,20 @@ $$;
 create or replace procedure pr_cursor_prac_1(p_table_name varchar)
 returns number
 language sql
+execute as caller
 as
 $$
-declare 
-    c1 cursor for select * from identifier(:p_table_name);
-    v_total number:=0;
+declare
+    c1 cursor for select * from identifier(?);
+    v_total_sal number:=0;
 begin
-    open c1;
+    open c1 using(p_table_name);
     for i in c1
     loop
-        v_total := v_total + i.SAL;
+        v_total_sal := v_total_sal + i.SAL;
     end loop;
     close c1;
-    return v_total;
+    return v_total_sal;
 end;
 $$;
 call pr_cursor_prac_1('EMP');
