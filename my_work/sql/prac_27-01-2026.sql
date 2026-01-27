@@ -85,3 +85,23 @@ begin
     return v_total_sal;
 end;
 $$;
+create or replace procedure pr_cursor_prac_1(p_table_name varchar)
+returns number
+language sql
+as
+$$
+declare 
+    c1 cursor for select * from identifier(:p_table_name);
+    v_total number:=0;
+begin
+    open c1;
+    for i in c1
+    loop
+        v_total := v_total + i.SAL;
+    end loop;
+    close c1;
+    return v_total;
+end;
+$$;
+call pr_cursor_prac_1('EMP');
+
